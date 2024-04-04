@@ -61,6 +61,7 @@
 /Backend/.yarn/build-state.yml
 /Backend/.yarn/install-state.gz
 /Backend/.pnp.*
+/Backend/.env
 
 
 /Frontend/todo-app/node_modules
