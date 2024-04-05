@@ -10,7 +10,7 @@ const AddButton = () => {
       >
         <img
           src={AddIcon}
-          alt="AdIcon"
+          alt="AddIcon"
           className="w-6 h-6 text-black dark:text-white mx-2"
         ></img>
         Add TODO

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { disableCompleted } from "../RTKFiles/tabSlice";
 
 const TODOCard = () => {
@@ -7,14 +7,21 @@ const TODOCard = () => {
   const [editedTitle, setEditedTitle] = useState("title");
   const [editedDescription, setEditedDescription] = useState("description");
   const tabData = useSelector((store) => store.tab);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const onUpdateClick = () => {
-    setIsEditing(true);
-    dispatch(disableCompleted({status:true}));
+    if (isEditing) {
+      dispatch(disableCompleted({ isUpdate: false }));
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
+      dispatch(disableCompleted({ isUpdate: true }));
+    }
   };
   const onCancelClick = () => {
-    setIsEditing(false);
-    dispatch(disableCompleted({status:false}));
+    if (isEditing) {
+      setIsEditing(false);
+      dispatch(disableCompleted({ isUpdate: false }));
+    }
   };
   return (
     <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 w-[90%] flex flex-col flex-wrap">
@@ -41,7 +48,7 @@ const TODOCard = () => {
         <p className="text-gray-600 whitespace-pre-wrap">{editedDescription}</p>
       )}
       <div className="flex items-center justify-between mt-4">
-        {(!isEditing && !tabData?.isCompleted) && (
+        {tabData?.isTodo && !isEditing && (
           <div className="flex items-center">
             <input type="checkbox" className="mr-2" />
             <label>Completed</label>
@@ -54,17 +61,21 @@ const TODOCard = () => {
               Created At: {"12-03-2024"}
             </span>
             <span className="text-sm font-bold">
-              {tabData?.isCompleted ? `Completed At : ${"12-03-2025"}`:`Last Updated :${"12-03-2024"}`}
+              {tabData?.isCompleted
+                ? `Completed At : ${"12-03-2025"}`
+                : `Last Updated :${"12-03-2024"}`}
             </span>
           </div>
         )}
         <div className="flex space-x-2">
-         {tabData?.isTodo && ( <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-3 py-2 rounded-md"
-            onClick={onUpdateClick}
-          >
-            Update
-          </button>)}
+          {tabData?.isTodo && (
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-3 py-2 rounded-md"
+              onClick={onUpdateClick}
+            >
+              Update
+            </button>
+          )}
           <button
             className="bg-red-500 hover:bg-red-600 text-white font-medium px-3 py-2 rounded-md"
             onClick={onCancelClick}
