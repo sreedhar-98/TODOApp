@@ -34,7 +34,7 @@ const tabSlice = createSlice({
       }
     },
     resetTabSlice: (state, action) => {
-      return { isTodo: true, isCompleted: false, disableCompleted: false };
+      return { isTodo: true, isCompleted: false, disableCompleted: 0 };
     },
   },
 });
