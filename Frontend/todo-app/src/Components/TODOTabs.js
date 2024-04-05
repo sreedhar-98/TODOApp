@@ -15,7 +15,7 @@ const TODOTabs = ({ disableCompleted }) => {
         <li className="w-full focus-within:z-10">
           <span
             className={`cursor-pointer inline-block w-full p-4 text-gray-900 ${
-              !isTodo && !disableCompleted ? "bg-gray-200" : "bg-blue-500"
+              !isTodo ? "bg-gray-200" : "bg-blue-500"
             } border-r border-gray-200 dark:border-gray-700 rounded-s-lg`}
             aria-current="page"
             onClick={() => {
@@ -31,7 +31,7 @@ const TODOTabs = ({ disableCompleted }) => {
             className={`cursor-pointer inline-block w-full p-4 border-r ${
               disableCompleted ? "text-white" : "text-black"
             } ${
-              isCompleted && !disableCompleted
+              isCompleted
                 ? "bg-blue-500"
                 : disableCompleted
                 ? "bg-gray-500"
