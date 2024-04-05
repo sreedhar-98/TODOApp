@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import BackgroundImage from "../Images/BackgroundImage.jpg";
 import Header from "./Header";
 import TODOTabs from "./TODOTabs";
 import TODOCard from "./TODOCard";
 
 const TODOPage = () => {
-  const [disableCompleted, setDisableCompleted] = useState(false);
   return (
     <div>
       <div
@@ -14,9 +13,9 @@ const TODOPage = () => {
       >
         <Header />
         <div className="w-[80%] mx-auto my-8 flex flex-col">
-          <TODOTabs disableCompleted={disableCompleted} />
+          <TODOTabs />
           <div className="my-4">
-            <TODOCard setDisableCompleted={(val) => setDisableCompleted(val)} />
+            <TODOCard />
           </div>
         </div>
       </div>

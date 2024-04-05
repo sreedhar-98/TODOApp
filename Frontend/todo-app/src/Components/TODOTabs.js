@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setTODO, setCompleted } from "../RTKFiles/tabSlice";
 
-const TODOTabs = ({ disableCompleted }) => {
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isTodo, setIsTodo] = useState(true);
+const TODOTabs = () => {
+  const tabData = useSelector((store) => store.tab);
+  const dispatch = useDispatch();
+  const { isTodo, isCompleted,disableCompleted } = tabData;
   return (
     <>
       <div className="sm:hidden">
@@ -19,8 +22,8 @@ const TODOTabs = ({ disableCompleted }) => {
             } border-r border-gray-200 dark:border-gray-700 rounded-s-lg`}
             aria-current="page"
             onClick={() => {
-              setIsTodo(true);
-              setIsCompleted(false);
+              if(isTodo) return null;
+              dispatch(setTODO());
             }}
           >
             TODO
@@ -39,8 +42,8 @@ const TODOTabs = ({ disableCompleted }) => {
             }`}
             onClick={() => {
               if (disableCompleted) return null;
-              setIsCompleted(true);
-              setIsTodo(false);
+              if(isCompleted) return null;
+              dispatch(setCompleted());
             }}
           >
             Completed

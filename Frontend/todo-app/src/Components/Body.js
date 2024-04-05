@@ -7,6 +7,7 @@ import { auth } from "../firebaseConfig";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../RTKFiles/userSlice";
 import Protected from "./Protected";
+import { resetTabSlice } from "../RTKFiles/tabSlice";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const Body = () => {
         dispatch(addUser({ isLoading: false, data: { uid, displayName } }));
       } else {
         dispatch(removeUser());
+        dispatch(resetTabSlice());
       }
     });
     return () => unsubscribe();

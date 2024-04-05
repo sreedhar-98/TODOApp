@@ -1,16 +1,20 @@
 import React, { useState } from "react";
+import { useDispatch,useSelector } from "react-redux";
+import { disableCompleted } from "../RTKFiles/tabSlice";
 
-const TODOCard = ({ setDisableCompleted }) => {
+const TODOCard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState("title");
   const [editedDescription, setEditedDescription] = useState("description");
+  const tabData = useSelector((store) => store.tab);
+  const dispatch=useDispatch();
   const onUpdateClick = () => {
     setIsEditing(true);
-    setDisableCompleted(true);
+    dispatch(disableCompleted({status:true}));
   };
   const onCancelClick = () => {
     setIsEditing(false);
-    setDisableCompleted(false);
+    dispatch(disableCompleted({status:false}));
   };
   return (
     <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 h-full w-full">
@@ -37,7 +41,7 @@ const TODOCard = ({ setDisableCompleted }) => {
         <p className="text-gray-600 whitespace-pre-wrap">{editedDescription}</p>
       )}
       <div className="flex items-center justify-between mt-4">
-        {!isEditing && (
+        {(!isEditing && !tabData?.isCompleted) && (
           <div className="flex items-center">
             <input type="checkbox" className="mr-2" />
             <label>Completed</label>
@@ -50,17 +54,17 @@ const TODOCard = ({ setDisableCompleted }) => {
               Created At: {"12-03-2024"}
             </span>
             <span className="text-sm font-bold">
-              Updated At: {"12-03-2024"}{" "}
+              {tabData?.isCompleted ? `Completed At : ${"12-03-2025"}`:`Last Updated :${"12-03-2024"}`}
             </span>
           </div>
         )}
         <div className="flex space-x-2">
-          <button
+         {tabData?.isTodo && ( <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-3 py-2 rounded-md"
             onClick={onUpdateClick}
           >
             Update
-          </button>
+          </button>)}
           <button
             className="bg-red-500 hover:bg-red-600 text-white font-medium px-3 py-2 rounded-md"
             onClick={onCancelClick}
