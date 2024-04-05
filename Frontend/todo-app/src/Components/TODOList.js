@@ -5,10 +5,10 @@ import TODOCard from "./TODOCard";
 
 const TODOList = () => {
   const tabData = useSelector((store) => store.tab);
-  const { isTodo } = tabData;
+  const { isTodo,disableCompleted } = tabData;
   return (
     <div className="my-8 flex flex-col gap-3">
-      {isTodo && <AddButton />}
+      {isTodo && disableCompleted===0 &&  <AddButton />}
 
       <div>
         <div className="flex flex-col gap-2">
