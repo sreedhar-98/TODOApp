@@ -4,17 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 
 const Header = () => {
-    const navigate=useNavigate();
-    const handleSignout = async () => {
-        try {
-          await signOut(auth);
-          navigate("/");
-        } catch (error) {
-          console.error(error);
-        }
-      };
+  const navigate = useNavigate();
+  const handleSignout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-black p-6">
+    <nav className="flex items-center justify-between flex-wrap bg-black p-6 sticky top-0 w-[100%]">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
         <svg
           className="fill-current h-8 w-8 mr-2"
@@ -29,7 +29,10 @@ const Header = () => {
       </div>
       <div className="w-full flex flex-grow lg:flex lg:items-center lg:w-auto items-end justify-end">
         <div>
-          <button className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0" onClick={handleSignout}>
+          <button
+            className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+            onClick={handleSignout}
+          >
             Sign out
           </button>
         </div>

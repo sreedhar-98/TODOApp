@@ -2,21 +2,19 @@ import React from "react";
 import BackgroundImage from "../Images/BackgroundImage.jpg";
 import Header from "./Header";
 import TODOTabs from "./TODOTabs";
-import TODOCard from "./TODOCard";
+import TODOList from "./TODOList";
 
 const TODOPage = () => {
   return (
-    <div>
+    <div className=""> 
       <div
-        className="w-screen, h-screen bg-cover"
+        className="w-screen, h-screen bg-cover flex flex-col overflow-auto"
         style={{ backgroundImage: `url(${BackgroundImage})`, opacity: 0.7 }}
       >
         <Header />
         <div className="w-[80%] mx-auto my-8 flex flex-col">
           <TODOTabs />
-          <div className="my-4">
-            <TODOCard />
-          </div>
+          <TODOList/>
         </div>
       </div>
     </div>
@@ -24,3 +22,4 @@ const TODOPage = () => {
 };
 
 export default TODOPage;
+

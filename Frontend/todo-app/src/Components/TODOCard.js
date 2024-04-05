@@ -17,7 +17,7 @@ const TODOCard = () => {
     dispatch(disableCompleted({status:false}));
   };
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 h-full w-full">
+    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 w-[90%] flex flex-col flex-wrap">
       {!isEditing ? (
         <h2 className="text-lg font-semibold mb-2">{editedTitle}</h2>
       ) : (
