@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { disableCompleted } from "../RTKFiles/tabSlice";
 
-const TODOCard = () => {
-  const [isEditing, setIsEditing] = useState(false);
+const TODOCard = ({isCreate,setIsAdd}) => {
+  const [isEditing, setIsEditing] = useState(isCreate);
   const [editedTitle, setEditedTitle] = useState("title");
   const [editedDescription, setEditedDescription] = useState("description");
   const tabData = useSelector((store) => store.tab);
@@ -12,6 +12,7 @@ const TODOCard = () => {
     if (isEditing) {
       dispatch(disableCompleted({ isUpdate: false }));
       setIsEditing(false);
+      if(setIsAdd) setIsAdd(false);
     } else {
       setIsEditing(true);
       dispatch(disableCompleted({ isUpdate: true }));
@@ -21,6 +22,7 @@ const TODOCard = () => {
     if (isEditing) {
       setIsEditing(false);
       dispatch(disableCompleted({ isUpdate: false }));
+      if(setIsAdd) setIsAdd(false);
     }
   };
   return (

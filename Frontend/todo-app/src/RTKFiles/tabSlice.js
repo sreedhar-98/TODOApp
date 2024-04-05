@@ -1,11 +1,10 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const tabSlice = createSlice({
   name: "tab",
   initialState: { isTodo: true, isCompleted: false, disableCompleted: 0 },
   reducers: {
     setTODO: (state, action) => {
-      console.log(current(state));
       return {
         isTodo: true,
         isCompleted: false,
