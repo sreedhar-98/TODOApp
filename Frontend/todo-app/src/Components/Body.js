@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../RTKFiles/userSlice";
 import Protected from "./Protected";
 import { resetTabSlice } from "../RTKFiles/tabSlice";
+import Test from "./Test";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,10 @@ const Body = () => {
         </Protected>
       ),
     },
+    {
+      path:"/test",
+      element:<Test/>
+    }
   ]);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

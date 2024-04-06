@@ -1,29 +1,38 @@
 import React, { useState } from "react";
 import AddButton from "./AddButton";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import TODOCard from "./TODOCard";
-import { disableCompleted } from "../RTKFiles/tabSlice";
+import Modal from "./Modal";
 
 const TODOList = () => {
   const tabData = useSelector((store) => store.tab);
-  const [isAdd,setIsAdd] = useState(false);
-  const dispatch=useDispatch();
+  const [showModal, setShowModal] = useState(false);
   const { isTodo } = tabData;
+  const task = {
+    completed: false,
+    createdAt: "1712148373",
+    todoId: "0f169550-aef9-46f2-8676-35fd91b8b0f5",
+    task: {
+      title: "Aksajdhckjus",
+      description: "sdjfvhskdjvfh",
+    },
+    userId: "asbvcsygv",
+  };
 
-  const handleAdd = ()=>{
-    setIsAdd(true);
-    dispatch(disableCompleted({isUpdate:true}));
-  }
-  console.log(isAdd);
+
+  const handleAdd = () => {
+    setShowModal(true);
+  };
   return (
     <div className="my-8 flex flex-col gap-3">
-      {isTodo && tabData.disableCompleted===0 &&  <AddButton handleAdd={handleAdd}/>}
+      {isTodo && <AddButton handleAdd={handleAdd}/>}
+
+      {showModal && <Modal setShowModal={setShowModal} isNew={true} task={task}/>}
 
       <div>
         <div className="flex flex-col gap-2">
-          {isAdd && <TODOCard isCreate={true} setIsAdd={setIsAdd}/>}
           {[...Array(2)].map((_, index) => (
-            <TODOCard key={index} isCreate={false}/>
+            <TODOCard key={index} isCreate={false} />
           ))}
         </div>
       </div>

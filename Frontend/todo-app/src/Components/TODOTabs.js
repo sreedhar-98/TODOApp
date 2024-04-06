@@ -5,7 +5,7 @@ import { setTODO, setCompleted } from "../RTKFiles/tabSlice";
 const TODOTabs = () => {
   const tabData = useSelector((store) => store.tab);
   const dispatch = useDispatch();
-  const { isTodo, isCompleted, disableCompleted } = tabData;
+  const { isTodo, isCompleted } = tabData;
   return (
     <>
       <div className="sm:hidden">
@@ -31,17 +31,8 @@ const TODOTabs = () => {
         </li>
         <li className="w-full focus-within:z-10">
           <span
-            className={`cursor-pointer inline-block w-full p-4 border-r ${
-              disableCompleted > 0 ? "text-white" : "text-black"
-            } ${
-              disableCompleted === 0 && isCompleted && !isTodo
-                ? "bg-blue-500"
-                : disableCompleted > 0
-                ? "bg-gray-500"
-                : "bg-gray-200"
-            }`}
+            className={`cursor-pointer inline-block w-full p-4 border-r text-black ${isCompleted?"bg-blue-500":"bg-gray-200"}`}
             onClick={() => {
-              if (disableCompleted > 0) return null;
               if (isCompleted) return null;
               dispatch(setCompleted());
             }}
