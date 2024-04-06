@@ -1,9 +1,17 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { resetModal } from "../RTKFiles/ModalSlice";
 
-const Modal = ({ setShowModal, isNew,task }) => {
-  
-  const [title,setTitle] = useState(task?.task?.title);
-  const [description,setDescription] = useState(task?.task?.description);
+const Modal = () => {
+  const { isNew, todo } = useSelector((store) => store.Modal);
+
+  const [title, setTitle] = useState(todo?.task?.title);
+  const [description, setDescription] = useState(todo?.task?.description);
+  const dispatch = useDispatch();
+
+  const handleSaveCreate = () => {
+    dispatch(resetModal());
+  };
 
   return (
     <>
@@ -32,11 +40,11 @@ const Modal = ({ setShowModal, isNew,task }) => {
                       id="title"
                       placeholder="Title"
                       value={title}
-                      onChange={(e)=>setTitle(e.target.value)}
+                      onChange={(e) => setTitle(e.target.value)}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     ></input>
                   </div>
-                  <div>
+                  <div style={{ whiteSpace: "pre-wrap" }}>
                     <label
                       htmlFor="description"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -48,7 +56,7 @@ const Modal = ({ setShowModal, isNew,task }) => {
                       rows={4}
                       placeholder="Description"
                       value={description}
-                      onChange={(e)=>setDescription(e.target.value)}
+                      onChange={(e) => setDescription(e.target.value)}
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     ></textarea>
                   </div>
@@ -61,11 +69,10 @@ const Modal = ({ setShowModal, isNew,task }) => {
                     </label>
                     <select
                       id="priority"
+                      defaultValue={isNew ? 1 : todo?.task?.priority}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
-                      <option selected value={1}>
-                        Low
-                      </option>
+                      <option value={1}>Low</option>
                       <option value={2}>Medium</option>
                       <option value={3}>High</option>
                     </select>
@@ -78,16 +85,16 @@ const Modal = ({ setShowModal, isNew,task }) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={() => dispatch(resetModal())}
               >
                 Close
               </button>
               <button
                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={handleSaveCreate}
               >
-                Save Changes
+                {!isNew ? "Save Changes" : "Create"}
               </button>
             </div>
           </div>

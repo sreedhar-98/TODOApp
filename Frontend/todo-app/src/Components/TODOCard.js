@@ -1,18 +1,50 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { resetModal, setModal } from "../RTKFiles/ModalSlice";
+import dateformatter from "../utils/dateformatter";
+import getpriority from "../utils/getpriority";
 
 const TODOCard = () => {
   const tabData = useSelector((store) => store.tab);
+  const dispatch = useDispatch();
+  const task = {
+    completed: false,
+    createdAt: "1712148373",
+    updatedAt: "1712148373",
+    todoId: "0f169550-aef9-46f2-8676-35fd91b8b0f5",
+    task: {
+      title: "Aksajdhckjus",
+      description: "sdjfvhskdjvfh",
+      priority: 2,
+    },
+    userId: "asbvcsygv",
+  };
   const onUpdateClick = () => {
-    console.log('Update');
+    dispatch(setModal({ isNew: false, todo: task }));
   };
   const onDeleteClick = () => {
-    console.log("Delete");
+    dispatch(resetModal());
   };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 w-[90%] flex flex-col flex-wrap">
-      <h2 className="text-lg font-semibold mb-2">{"editedTitle"}</h2>
-      <p className="text-gray-600 whitespace-pre-wrap">{"editedDescription"}</p>
+      <div className="flex items-end justify-between">
+        <h2 className="text-lg font-semibold mb-2">{task?.task?.title}</h2>
+        <span
+          className={`${
+            task?.task?.priority === 1
+              ? "text-green-500"
+              : task?.task?.priority === 2
+              ? "text-yellow-500"
+              : "text-red-600"
+          } font-bold`}
+        >
+          {getpriority(task?.task?.priority)}
+        </span>
+      </div>
+      <p className="text-gray-600 whitespace-pre-wrap">
+        {task?.task?.description}
+      </p>
       <div className="flex items-center justify-between mt-4">
         {tabData?.isTodo && (
           <div className="flex items-center">
@@ -21,17 +53,18 @@ const TODOCard = () => {
           </div>
         )}
 
-  
-          <div className="text-sm text-gray-500 flex gap-6">
-            <span className="text-sm font-bold">
-              Created At: {"12-03-2024"}
-            </span>
-            <span className="text-sm font-bold">
-              {tabData?.isCompleted
-                ? `Completed At : ${"12-03-2025"}`
-                : `Last Updated :${"12-03-2024"}`}
-            </span>
-          </div>
+        <div className="text-sm text-gray-500 flex gap-6">
+          <span className="text-sm font-bold">
+            Created At: {dateformatter(task?.createdAt)}
+          </span>
+          <span className="text-sm font-bold">
+            {tabData?.isCompleted
+              ? `Completed At : ${dateformatter(task?.completedAt)}`
+              : task?.updatedAt
+              ? `Last Updated :${dateformatter(task?.updatedAt)}`
+              : null}
+          </span>
+        </div>
         <div className="flex space-x-2">
           {tabData?.isTodo && (
             <button
