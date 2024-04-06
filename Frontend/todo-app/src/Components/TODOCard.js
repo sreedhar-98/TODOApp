@@ -4,21 +4,21 @@ import { resetModal, setModal } from "../RTKFiles/ModalSlice";
 import dateformatter from "../utils/dateformatter";
 import getpriority from "../utils/getpriority";
 
-const TODOCard = () => {
+const TODOCard = ({task}) => {
   const tabData = useSelector((store) => store.tab);
   const dispatch = useDispatch();
-  const task = {
-    completed: false,
-    createdAt: "1712148373",
-    updatedAt: "1712148373",
-    todoId: "0f169550-aef9-46f2-8676-35fd91b8b0f5",
-    task: {
-      title: "Aksajdhckjus",
-      description: "sdjfvhskdjvfh",
-      priority: 2,
-    },
-    userId: "asbvcsygv",
-  };
+  // const task = {
+  //   completed: false,
+  //   createdAt: "1712148373",
+  //   updatedAt: "1712148373",
+  //   todoId: "0f169550-aef9-46f2-8676-35fd91b8b0f5",
+  //   task: {
+  //     title: "Aksajdhckjus",
+  //     description: "sdjfvhskdjvfh",
+  //     priority: 2,
+  //   },
+  //   userId: "asbvcsygv",
+  // };
   const onUpdateClick = () => {
     dispatch(setModal({ isNew: false, todo: task }));
   };
