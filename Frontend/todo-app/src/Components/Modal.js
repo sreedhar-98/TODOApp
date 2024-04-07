@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetModal } from "../RTKFiles/ModalSlice";
-import { useAddTodoMutation } from "../RTKFiles/TODOQuery";
+import {
+  useAddTodoMutation,
+  useUpdateTodoMutation,
+} from "../RTKFiles/TODOQuery";
 import LoadingSpinner from "../SVG/LoadingSpinner.svg";
 
 const Modal = () => {
@@ -11,6 +14,7 @@ const Modal = () => {
   const [description, setDescription] = useState(todo?.task?.description);
   const dispatch = useDispatch();
   const [addTodo, { isSuccess, isError, isLoading }] = useAddTodoMutation();
+  const [updateTodo, update_status_data] = useUpdateTodoMutation();
   const priority = useRef();
 
   const handleSaveCreate = () => {
@@ -22,12 +26,21 @@ const Modal = () => {
           priority: priority.current.value,
         },
       });
+    } else {
+      updateTodo({
+        task: {
+          title: title,
+          description: description,
+          priority: priority.current.value,
+        },
+        todoId: todo?.todoId,
+      });
     }
   };
 
   useEffect(() => {
-    if (isSuccess) dispatch(resetModal());
-  }, [dispatch, isSuccess]);
+    if (isSuccess || update_status_data.isSuccess) dispatch(resetModal());
+  }, [dispatch, isSuccess, update_status_data.isSuccess]);
 
   return (
     <>
@@ -100,9 +113,13 @@ const Modal = () => {
             </div>
             {/*footer*/}
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-            {isError && (  <div className="bg-red-500 flex">
-                <span className="p-1 md:p-2 text-white font-semibold text-sm md:text-base">There was an error saving your TODO. Please try again.</span>
-              </div>)}
+              {isError && (
+                <div className="bg-red-500 flex">
+                  <span className="p-1 md:p-2 text-white font-semibold text-sm md:text-base">
+                    There was an error saving your TODO. Please try again.
+                  </span>
+                </div>
+              )}
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
@@ -117,8 +134,14 @@ const Modal = () => {
                 disabled={isLoading || !title || !description}
               >
                 <div className="flex items-center">
-                {isLoading && <img src={LoadingSpinner} alt="spinner" className="inline mr-3 w-4 h-4 text-white animate-spin"></img>}
-                {!isNew ? "Save Changes" : "Create"}
+                  {(isLoading || update_status_data.isLoading ) && (
+                    <img
+                      src={LoadingSpinner}
+                      alt="spinner"
+                      className="inline mr-3 w-4 h-4 text-white animate-spin"
+                    ></img>
+                  )}
+                  {!isNew ? "Save Changes" : "Create"}
                 </div>
               </button>
             </div>

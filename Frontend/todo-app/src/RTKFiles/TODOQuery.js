@@ -30,7 +30,7 @@ const todo_api = createApi({
       }),
       async onQueryStarted({ todo }, { dispatch, queryFulfilled }) {
         try {
-          const {data} = await queryFulfilled;
+          const { data } = await queryFulfilled;
           dispatch(
             todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
               draft["todos"] = [data, ...draft["todos"]];
@@ -41,9 +41,58 @@ const todo_api = createApi({
         }
       },
     }),
+    deleteTodo: build.mutation({
+      query: (body) => ({
+        url: `/data/${body?.todoId}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted({ todoId }, { dispatch, queryFulfilled }) {
+        try {
+          dispatch(
+            todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
+              const filtered_todos = draft["todos"].filter(
+                (todo) => todo?.todoId !== todoId
+              );
+              draft["todos"] = filtered_todos;
+            })
+          );
+          await queryFulfilled;
+        } catch (error) {
+          dispatch(todo_api.util.invalidateTags(["TODO"]));
+        }
+      },
+    }),
+    updateTodo: build.mutation({
+      query: (body) => ({
+        url: `/data/${body?.todoId}`,
+        method: "PATCH",
+        body: body,
+      }),
+      async onQueryStarted({ todoId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
+              const updated_todos = draft["todos"].map((todo) => {
+                if (todo.todoId === todoId) return data;
+                else return todo;
+              });
+              draft["todos"] = updated_todos;
+            })
+          );
+        } catch (error) {
+          // dispatch(todo_api.util.invalidateTags(["TODO"]));
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetTodosQuery, useAddTodoMutation } = todo_api;
+export const {
+  useGetTodosQuery,
+  useAddTodoMutation,
+  useDeleteTodoMutation,
+  useUpdateTodoMutation,
+} = todo_api;
 
 export default todo_api;

@@ -1,12 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { resetModal, setModal } from "../RTKFiles/ModalSlice";
+import { setModal } from "../RTKFiles/ModalSlice";
 import dateformatter from "../utils/dateformatter";
 import getpriority from "../utils/getpriority";
+import { useDeleteTodoMutation } from "../RTKFiles/TODOQuery";
 
 const TODOCard = ({task}) => {
   const tabData = useSelector((store) => store.tab);
   const dispatch = useDispatch();
+  const [deleteTodo, delete_status_data] = useDeleteTodoMutation();
   // const task = {
   //   completed: false,
   //   createdAt: "1712148373",
@@ -21,9 +23,10 @@ const TODOCard = ({task}) => {
   // };
   const onUpdateClick = () => {
     dispatch(setModal({ isNew: false, todo: task }));
+    
   };
   const onDeleteClick = () => {
-    dispatch(resetModal());
+    deleteTodo({todoId:task?.todoId});
   };
 
   return (
