@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../RTKFiles/ModalSlice";
 import dateformatter from "../utils/dateformatter";
 import getpriority from "../utils/getpriority";
-import { useDeleteTodoMutation } from "../RTKFiles/TODOQuery";
+import ConfirmModal from "./ConfirmModal";
 
-const TODOCard = ({task}) => {
+const TODOCard = ({ task }) => {
   const tabData = useSelector((store) => store.tab);
   const dispatch = useDispatch();
-  const [deleteTodo, delete_status_data] = useDeleteTodoMutation();
+  const [show, setShow] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
   // const task = {
   //   completed: false,
   //   createdAt: "1712148373",
@@ -23,10 +24,15 @@ const TODOCard = ({task}) => {
   // };
   const onUpdateClick = () => {
     dispatch(setModal({ isNew: false, todo: task }));
-    
   };
   const onDeleteClick = () => {
-    deleteTodo({todoId:task?.todoId});
+    setShow(true);
+    setIsDelete(true);
+  };
+
+  const onCheckBoxChange = (e) => {
+    setShow(true);
+    setIsDelete(false);
   };
 
   return (
@@ -35,9 +41,9 @@ const TODOCard = ({task}) => {
         <h2 className="text-lg font-semibold mb-2">{task?.task?.title}</h2>
         <span
           className={`${
-            task?.task?.priority === '1'
+            task?.task?.priority === "1"
               ? "text-green-500"
-              : task?.task?.priority === '2'
+              : task?.task?.priority === "2"
               ? "text-yellow-500"
               : "text-red-600"
           } font-bold`}
@@ -51,7 +57,7 @@ const TODOCard = ({task}) => {
       <div className="flex items-center justify-between mt-4">
         {tabData?.isTodo && (
           <div className="flex items-center">
-            <input type="checkbox" className="mr-2" />
+            <input type="checkbox" className="mr-2" onChange={onCheckBoxChange} checked={show}/>
             <label>Completed</label>
           </div>
         )}
@@ -85,6 +91,12 @@ const TODOCard = ({task}) => {
           </button>
         </div>
       </div>
+      {show && isDelete && (
+        <ConfirmModal setShow={setShow} todo={task} isCompleted={false} />
+      )}
+      {show && !isDelete && (
+        <ConfirmModal setShow={setShow} todo={task} isCompleted={true} />
+      )}
     </div>
   );
 };

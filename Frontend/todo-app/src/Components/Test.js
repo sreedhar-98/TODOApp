@@ -1,18 +1,19 @@
-import React from "react";
-import LoadingSpinner from "../SVG/LoadingSpinner.svg";
+import React, { useState } from "react";
+import CompletedCheckModal from "./ConfirmModal";
+
 const Test = () => {
+  const [show, setShow] = useState(false);
   return (
     <>
       <button
         className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button"
+        onClick={() => setShow(true)}
       >
-        <img
-          src={LoadingSpinner}
-          alt="spinner"
-          className="inline mr-3 w-4 h-4 text-white animate-spin"
-        ></img>
+        Show
       </button>
+
+      {show && <CompletedCheckModal setShow={setShow} />}
     </>
   );
 };
