@@ -6,19 +6,28 @@ const addTODO = async (req, res) => {
   try {
     const task = req.body.task;
     const userId = req.body.userId;
+    const todoId = uuidv4();
+    const createdAt = Math.floor(Date.now() / 1000).toString();
 
     const command = new PutCommand({
       TableName: "TODO",
       Item: {
         userId: userId,
-        todoId: uuidv4(),
+        todoId: todoId,
         completed: false,
-        createdAt: Math.floor(Date.now() / 1000).toString(),
+        createdAt: createdAt,
         task: task,
       },
     });
     await dynamodb.send(command);
-    return res.status(201).json({ message: "TODO added succesfully" });
+    return res
+      .status(201)
+      .json({
+        completed: false,
+        todoId: todoId,
+        createdAt: createdAt,
+        task: task,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to add TODO" });

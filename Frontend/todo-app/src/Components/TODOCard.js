@@ -32,9 +32,9 @@ const TODOCard = ({task}) => {
         <h2 className="text-lg font-semibold mb-2">{task?.task?.title}</h2>
         <span
           className={`${
-            task?.task?.priority === 1
+            task?.task?.priority === '1'
               ? "text-green-500"
-              : task?.task?.priority === 2
+              : task?.task?.priority === '2'
               ? "text-yellow-500"
               : "text-red-600"
           } font-bold`}
