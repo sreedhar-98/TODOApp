@@ -99,14 +99,14 @@ const TODOCard = ({ task }) => {
       {show && isDelete && (
         <ConfirmModal
           setShow={setShow}
-          todoId={task?.todoId}
+          createdAt={task?.createdAt}
           isCompleted={false}
         />
       )}
       {show && !isDelete && (
         <ConfirmModal
           setShow={setShow}
-          todoId={task?.todoId}
+          createdAt={task?.createdAt}
           isCompleted={true}
         />
       )}

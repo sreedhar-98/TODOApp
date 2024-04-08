@@ -7,15 +7,15 @@ import DeleteIcon from "../SVG/DeleteIcon.svg";
 import CompletedIcon from "../SVG/CompletedIcon.svg";
 import LoadingSpinner from "../SVG/LoadingSpinner.svg";
 
-const ConfirmModal = ({ setShow, todoId, isCompleted }) => {
+const ConfirmModal = ({ setShow, createdAt, isCompleted }) => {
   const [deleteTodo] = useDeleteTodoMutation();
   const [updateTodo, update_status_data] = useUpdateTodoMutation();
   const checkHandler = () => {
     if (!isCompleted) {
-      deleteTodo({ todoId: todoId });
+      deleteTodo({ createdAt: createdAt });
       setShow(false);
     } else {
-      updateTodo({ todoId: todoId, markCompleted: true });
+      updateTodo({ createdAt: createdAt, markCompleted: true });
     }
   };
 

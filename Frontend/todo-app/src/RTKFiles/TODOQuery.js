@@ -43,15 +43,15 @@ const todo_api = createApi({
     }),
     deleteTodo: build.mutation({
       query: (body) => ({
-        url: `/data/${body?.todoId}`,
+        url: `/data/${body?.createdAt}`,
         method: "DELETE",
       }),
-      async onQueryStarted({ todoId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ createdAt }, { dispatch, queryFulfilled }) {
         try {
           dispatch(
             todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
               const filtered_todos = draft["todos"].filter(
-                (todo) => todo?.todoId !== todoId
+                (todo) => todo?.createdAt !== createdAt
               );
               draft["todos"] = filtered_todos;
             })
@@ -64,17 +64,20 @@ const todo_api = createApi({
     }),
     updateTodo: build.mutation({
       query: (body) => ({
-        url: `/data/${body?.todoId}`,
+        url: `/data/${body?.createdAt}`,
         method: "PATCH",
         body: body,
       }),
-      async onQueryStarted({ todoId, markCompleted }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        { createdAt, markCompleted },
+        { dispatch, queryFulfilled }
+      ) {
         try {
           const { data } = await queryFulfilled;
           dispatch(
             todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
               const updated_todos = draft["todos"].map((todo) => {
-                if (todo.todoId === todoId) return data;
+                if (todo.createdAt === createdAt) return data;
                 else return todo;
               });
               draft["todos"] = updated_todos;

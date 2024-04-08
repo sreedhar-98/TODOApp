@@ -33,7 +33,7 @@ const Modal = () => {
           description: description,
           priority: priority.current.value,
         },
-        todoId: todo?.todoId,
+        createdAt: todo?.createdAt,
       });
     }
   };
