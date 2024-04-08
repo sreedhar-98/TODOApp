@@ -68,7 +68,7 @@ const todo_api = createApi({
         method: "PATCH",
         body: body,
       }),
-      async onQueryStarted({ todoId }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ todoId, markCompleted }, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           dispatch(

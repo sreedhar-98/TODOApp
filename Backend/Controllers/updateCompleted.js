@@ -4,27 +4,27 @@ import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 const updateCompleted = async (req, res) => {
   try {
     const todoId = req.params.id;
-    const userId = req.body.userId;
-    const completed = req.body.completed;
-    if (!todoId || !userId || typeof completed !== "boolean") {
+    const UserId = req.body.userId;
+    if (!todoId) {
       return res.status(400).json({
-        error: "Missing TODO ID, userId, or invalid 'completed' value",
+        error: "Missing TODO ID.",
       });
     }
     const command = new UpdateCommand({
       TableName: "TODO",
-      Key: { todoId: todoId, userId: userId },
+      Key: { todoId: todoId, userId: UserId },
       UpdateExpression: "SET completed = :completed,completedAt=:completedAt",
       ConditionExpression: "attribute_exists(todoId)",
       ExpressionAttributeValues: {
-        ":completed": completed,
+        ":completed": true,
         ":completedAt": Math.floor(Date.now() / 1000).toString(),
       },
-      ConditionExpression: "attribute_exists(todoId)", // Ensure item exists
-      ReturnValues: "UPDATED_NEW",
+      ConditionExpression: "attribute_exists(todoId)", 
+      ReturnValues: "ALL_NEW",
     });
-    await dynamodb.send(command);
-    return res.status(200).json({ message: "TODO completed status updated" });
+    const { Attributes } = await dynamodb.send(command);
+    const { userId, ...responseObject } = Attributes;
+    return res.status(200).json(responseObject);
   } catch (error) {
     if (error.name === "ConditionalCheckFailedException")
       return res.status(404).json({ error: "TODO not found" });

@@ -3,6 +3,7 @@ import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const getTODO = async (req, res) => {
   try {
+    console.log("Called");
     const userId = req.body.userId;
     const LastKey = req.body.LastEvaluatedKey;
     const include = LastKey ? true : false;

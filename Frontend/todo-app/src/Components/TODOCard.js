@@ -57,7 +57,12 @@ const TODOCard = ({ task }) => {
       <div className="flex items-center justify-between mt-4">
         {tabData?.isTodo && (
           <div className="flex items-center">
-            <input type="checkbox" className="mr-2" onChange={onCheckBoxChange} checked={show}/>
+            <input
+              type="checkbox"
+              className="mr-2"
+              onChange={onCheckBoxChange}
+              checked={show && !isDelete}
+            />
             <label>Completed</label>
           </div>
         )}
@@ -67,7 +72,7 @@ const TODOCard = ({ task }) => {
             Created At: {dateformatter(task?.createdAt)}
           </span>
           <span className="text-sm font-bold">
-            {tabData?.isCompleted
+            {task?.completedAt
               ? `Completed At : ${dateformatter(task?.completedAt)}`
               : task?.updatedAt
               ? `Last Updated :${dateformatter(task?.updatedAt)}`
@@ -92,10 +97,18 @@ const TODOCard = ({ task }) => {
         </div>
       </div>
       {show && isDelete && (
-        <ConfirmModal setShow={setShow} todo={task} isCompleted={false} />
+        <ConfirmModal
+          setShow={setShow}
+          todoId={task?.todoId}
+          isCompleted={false}
+        />
       )}
       {show && !isDelete && (
-        <ConfirmModal setShow={setShow} todo={task} isCompleted={true} />
+        <ConfirmModal
+          setShow={setShow}
+          todoId={task?.todoId}
+          isCompleted={true}
+        />
       )}
     </div>
   );

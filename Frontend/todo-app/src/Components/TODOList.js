@@ -9,7 +9,17 @@ const TODOList = () => {
   const tabData = useSelector((store) => store.tab);
   const ModalData = useSelector((store) => store.Modal);
   const { isTodo } = tabData;
-  const { data, isSuccess } = useGetTodosQuery();
+  const { data, isSuccess, isLoading } = useGetTodosQuery();
+
+  if (isLoading) return;
+
+  const todo_filtered_data = data["todos"].filter((todo) => {
+    return !todo.completed;
+  });
+
+  const completed_filtered_data = data["todos"].filter((todo) => {
+    return todo.completed;
+  });
 
   return (
     <div className="my-8 flex flex-col gap-3">
@@ -36,7 +46,14 @@ const TODOList = () => {
       <div>
         <div className="flex flex-col gap-2">
           {isSuccess &&
-            data?.todos.map((todo) => (
+            isTodo &&
+            todo_filtered_data.map((todo) => (
+              <TODOCard key={todo?.todoId} task={todo} />
+            ))}
+
+          {isSuccess &&
+            !isTodo &&
+            completed_filtered_data.map((todo) => (
               <TODOCard key={todo?.todoId} task={todo} />
             ))}
         </div>
