@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetModal } from "../RTKFiles/ModalSlice";
 import {
@@ -13,7 +13,7 @@ const Modal = () => {
   const [title, setTitle] = useState(todo?.task?.title);
   const [description, setDescription] = useState(todo?.task?.description);
   const dispatch = useDispatch();
-  const [addTodo, { isSuccess, isError, isLoading }] = useAddTodoMutation();
+  const [addTodo, { isError, isLoading }] = useAddTodoMutation();
   const [updateTodo, update_status_data] = useUpdateTodoMutation();
   const priority = useRef();
 
@@ -25,6 +25,8 @@ const Modal = () => {
           description: description,
           priority: priority.current.value,
         },
+        completed: false,
+        createdAt: Math.floor(Date.now() / 1000),
       });
     } else {
       updateTodo({
@@ -34,13 +36,12 @@ const Modal = () => {
           priority: priority.current.value,
         },
         createdAt: todo?.createdAt,
+        updatedAt: Math.floor(Date.now() / 1000),
+        completed: false,
       });
     }
+    dispatch(resetModal());
   };
-
-  useEffect(() => {
-    if (isSuccess || update_status_data.isSuccess) dispatch(resetModal());
-  }, [dispatch, isSuccess, update_status_data.isSuccess]);
 
   return (
     <>
@@ -134,7 +135,7 @@ const Modal = () => {
                 disabled={isLoading || !title || !description}
               >
                 <div className="flex items-center">
-                  {(isLoading || update_status_data.isLoading ) && (
+                  {(isLoading || update_status_data.isLoading) && (
                     <img
                       src={LoadingSpinner}
                       alt="spinner"

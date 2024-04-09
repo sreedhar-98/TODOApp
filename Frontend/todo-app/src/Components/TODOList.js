@@ -9,9 +9,9 @@ const TODOList = () => {
   const tabData = useSelector((store) => store.tab);
   const ModalData = useSelector((store) => store.Modal);
   const { isTodo } = tabData;
-  const { data, isSuccess, isLoading } = useGetTodosQuery();
+  const { data, isSuccess, isLoading,isError } = useGetTodosQuery();
 
-  if (isLoading) return;
+  if (isLoading || isError) return;
 
   const todo_filtered_data = data["todos"].filter((todo) => {
     return !todo.completed;
@@ -48,13 +48,13 @@ const TODOList = () => {
           {isSuccess &&
             isTodo &&
             todo_filtered_data.map((todo) => (
-              <TODOCard key={todo?.todoId} task={todo} />
+              <TODOCard key={todo?.createdAt} task={todo} />
             ))}
 
           {isSuccess &&
             !isTodo &&
             completed_filtered_data.map((todo) => (
-              <TODOCard key={todo?.todoId} task={todo} />
+              <TODOCard key={todo?.createdAt} task={todo} />
             ))}
         </div>
       </div>

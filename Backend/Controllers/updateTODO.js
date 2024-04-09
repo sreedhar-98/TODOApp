@@ -8,36 +8,33 @@ const updateTODO = async (req, res) => {
     const UserId = req.body.userId;
     const createdAt = parseInt(req.params.id,10);
     const newTask = req.body?.task;
-    const markCompleted = req.body.markCompleted;
-    const updatedTime=Math.floor(Date.now() / 1000).toString();
+    const completed=req.body.completed;
+    const updatedTime=req.body.updatedAt;
 
     if (!createdAt) return res.status(400).json({ error: "Missing ID" });
-    if (!markCompleted && !newTask)
+    if (!completed && !newTask)
       return res.status(400).json({ error: "Missing updated task" });
 
     const command = new UpdateCommand({
       TableName: process.env.TABLE_NAME,
       Key: { createdAt: createdAt, userId: UserId },
-      UpdateExpression: !markCompleted
+      UpdateExpression: !completed
         ? "SET task = :newTask, updatedAt = :updatedAt"
-        : "SET completed = :completed,completedAt=:completedAt",
+        : "SET completed = :completed,updatedAt=:updatedAt",
       ConditionExpression: "attribute_exists(createdAt)",
-      ExpressionAttributeValues: !markCompleted
+      ExpressionAttributeValues: !completed
         ? {
             ":newTask": newTask ? newTask : undefined,
             ":updatedAt": updatedTime,
           }
         : {
             ":completed": true,
-            ":completedAt": updatedTime,
+            ":updatedAt": updatedTime,
           },
-      ReturnValues: "ALL_NEW",
     });
-    const { Attributes } = await dynamodb.send(command);
-    const { userId, ...responseObject } = Attributes;
-    return res.status(200).json(responseObject);
+    await dynamodb.send(command);
+    return res.status(200).json({message:"Updated"});
   } catch (error) {
-    console.error(error);
     if (error.name === "ConditionalCheckFailedException")
       return res.status(404).json({ error: "TODO not found" });
     return res.status(500).json({ error: "Failed to update TODO" });

@@ -26,16 +26,16 @@ const todo_api = createApi({
       query: (body) => ({
         url: "/data",
         method: "POST",
-        body: body,
+        body: {...body,completed:undefined},
       }),
-      async onQueryStarted({ todo }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(body, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
           dispatch(
             todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
-              draft["todos"] = [data, ...draft["todos"]];
+              draft["todos"] = [body, ...draft["todos"]];
             })
           );
+          await queryFulfilled;
         } catch (error) {
           dispatch(todo_api.util.invalidateTags(["TODO"]));
         }
@@ -69,20 +69,20 @@ const todo_api = createApi({
         body: body,
       }),
       async onQueryStarted(
-        { createdAt, markCompleted },
+        body,
         { dispatch, queryFulfilled }
       ) {
         try {
-          const { data } = await queryFulfilled;
           dispatch(
             todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
               const updated_todos = draft["todos"].map((todo) => {
-                if (todo.createdAt === createdAt) return data;
+                if (todo.createdAt === body?.createdAt) return body;
                 else return todo;
               });
               draft["todos"] = updated_todos;
             })
           );
+          await queryFulfilled;
         } catch (error) {
           // dispatch(todo_api.util.invalidateTags(["TODO"]));
         }

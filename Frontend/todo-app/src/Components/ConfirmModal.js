@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   useDeleteTodoMutation,
   useUpdateTodoMutation,
@@ -7,24 +7,21 @@ import DeleteIcon from "../SVG/DeleteIcon.svg";
 import CompletedIcon from "../SVG/CompletedIcon.svg";
 import LoadingSpinner from "../SVG/LoadingSpinner.svg";
 
-const ConfirmModal = ({ setShow, createdAt, isCompleted }) => {
+const ConfirmModal = ({ setShow, todo, isCompleted }) => {
   const [deleteTodo] = useDeleteTodoMutation();
   const [updateTodo, update_status_data] = useUpdateTodoMutation();
   const checkHandler = () => {
     if (!isCompleted) {
-      deleteTodo({ createdAt: createdAt });
-      setShow(false);
+      deleteTodo({ createdAt: todo.createdAt });
     } else {
-      updateTodo({ createdAt: createdAt, markCompleted: true });
+      updateTodo({
+        ...todo,
+        completed: true,
+        updatedAt: Math.floor(Date.now() / 1000),
+      });
     }
+    setShow(false);
   };
-
-  useEffect(() => {
-    if (update_status_data.isSuccess) {
-      setShow(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [update_status_data.isSuccess]);
 
   return (
     <div
@@ -86,7 +83,7 @@ const ConfirmModal = ({ setShow, createdAt, isCompleted }) => {
                 } sm:ml-3 sm:w-auto`}
               >
                 <div className="flex items-center">
-                  {(update_status_data.isLoading) && (
+                  {update_status_data.isLoading && (
                     <img
                       src={LoadingSpinner}
                       alt="spinner"

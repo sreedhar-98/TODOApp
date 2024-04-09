@@ -10,18 +10,6 @@ const TODOCard = ({ task }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  // const task = {
-  //   completed: false,
-  //   createdAt: "1712148373",
-  //   updatedAt: "1712148373",
-  //   todoId: "0f169550-aef9-46f2-8676-35fd91b8b0f5",
-  //   task: {
-  //     title: "Aksajdhckjus",
-  //     description: "sdjfvhskdjvfh",
-  //     priority: 2,
-  //   },
-  //   userId: "asbvcsygv",
-  // };
   const onUpdateClick = () => {
     dispatch(setModal({ isNew: false, todo: task }));
   };
@@ -72,8 +60,8 @@ const TODOCard = ({ task }) => {
             Created At: {dateformatter(task?.createdAt)}
           </span>
           <span className="text-sm font-bold">
-            {task?.completedAt
-              ? `Completed At : ${dateformatter(task?.completedAt)}`
+            {task?.completed
+              ? `Completed At : ${dateformatter(task?.updatedAt)}`
               : task?.updatedAt
               ? `Last Updated :${dateformatter(task?.updatedAt)}`
               : null}
@@ -99,14 +87,14 @@ const TODOCard = ({ task }) => {
       {show && isDelete && (
         <ConfirmModal
           setShow={setShow}
-          createdAt={task?.createdAt}
+          todo={task}
           isCompleted={false}
         />
       )}
       {show && !isDelete && (
         <ConfirmModal
           setShow={setShow}
-          createdAt={task?.createdAt}
+          todo={task}
           isCompleted={true}
         />
       )}
