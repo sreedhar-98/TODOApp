@@ -21,7 +21,7 @@ const updateTODO = async (req, res) => {
       UpdateExpression: !markCompleted
         ? "SET task = :newTask, updatedAt = :updatedAt"
         : "SET completed = :completed,completedAt=:completedAt",
-      ConditionExpression: "attribute_exists(todoId)",
+      ConditionExpression: "attribute_exists(createdAt)",
       ExpressionAttributeValues: !markCompleted
         ? {
             ":newTask": newTask ? newTask : undefined,

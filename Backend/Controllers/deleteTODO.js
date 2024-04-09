@@ -8,7 +8,7 @@ const deleteTODO = async (req, res) => {
     const id = parseInt(req.params.id,10);
     const userId = req.body.userId;
     if (!id)
-      return res.status(400).json({ error: "Missing TODO ID in request" });
+      return res.status(400).json({ error: "Missing ID in request" });
 
     const command = new DeleteCommand({
       TableName: process.env.TABLE_NAME,
