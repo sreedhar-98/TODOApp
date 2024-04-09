@@ -5,11 +5,10 @@ import {
 } from "../RTKFiles/TODOQuery";
 import DeleteIcon from "../SVG/DeleteIcon.svg";
 import CompletedIcon from "../SVG/CompletedIcon.svg";
-import LoadingSpinner from "../SVG/LoadingSpinner.svg";
 
 const ConfirmModal = ({ setShow, todo, isCompleted }) => {
   const [deleteTodo] = useDeleteTodoMutation();
-  const [updateTodo, update_status_data] = useUpdateTodoMutation();
+  const [updateTodo] = useUpdateTodoMutation();
   const checkHandler = () => {
     if (!isCompleted) {
       deleteTodo({ createdAt: todo.createdAt });
@@ -75,23 +74,13 @@ const ConfirmModal = ({ setShow, todo, isCompleted }) => {
               <button
                 type="button"
                 onClick={checkHandler}
-                disabled={update_status_data.isLoading}
                 className={`inline-flex w-full justify-center rounded-md ${
                   isCompleted ? "bg-green-500" : "bg-red-600"
                 } px-3 py-2 text-sm font-semibold text-white shadow-sm ${
                   isCompleted ? "hover:bg-green-700" : "hover:bg-red-700"
                 } sm:ml-3 sm:w-auto`}
               >
-                <div className="flex items-center">
-                  {update_status_data.isLoading && (
-                    <img
-                      src={LoadingSpinner}
-                      alt="spinner"
-                      className="inline mr-3 w-3 h-3 text-black animate-spin"
-                    ></img>
-                  )}
-                  {!isCompleted ? "Delete" : "Yes"}
-                </div>
+                {!isCompleted ? "Delete" : "Yes"}
               </button>
               <button
                 type="button"
@@ -104,13 +93,6 @@ const ConfirmModal = ({ setShow, todo, isCompleted }) => {
               >
                 {!isCompleted ? "Cancel" : "No"}
               </button>
-              {update_status_data.isError && (
-                <div className="bg-red-500 flex">
-                  <span className="p-1 md:p-2 text-white font-semibold text-sm">
-                    OOPS!Something went wrong.Please try again.
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>
