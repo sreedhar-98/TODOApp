@@ -2,13 +2,17 @@ import React from "react";
 import { auth } from "../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import todo_api from "../RTKFiles/TODOQuery";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSignout = async () => {
     try {
       await signOut(auth);
       navigate("/");
+      dispatch(todo_api.util.resetApiState());
     } catch (error) {
       console.error(error);
     }
