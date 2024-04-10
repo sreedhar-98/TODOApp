@@ -1,10 +1,13 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import AddButton from "./AddButton";
 import { useSelector } from "react-redux";
 import TODOCard from "./TODOCard";
 import Modal from "./Modal";
 import { useGetTodosQuery } from "../RTKFiles/TODOQuery";
-import { sortTodosByPriority } from "../utils/SortTodos";
+import {
+  sortTodosByPriority,
+  sortTodosByCompletedDate,
+} from "../utils/SortTodos";
 
 const TODOList = () => {
   const tabData = useSelector((store) => store.tab);
@@ -26,6 +29,8 @@ const TODOList = () => {
   const sortFunctions = {
     priorityhigh: (data) => sortTodosByPriority(data, true),
     prioritylow: (data) => sortTodosByPriority(data, false),
+    completedhigh: (data) => sortTodosByCompletedDate(data, true),
+    completedlow: (data) => sortTodosByCompletedDate(data, false),
   };
 
   return (
@@ -44,6 +49,16 @@ const TODOList = () => {
             <option value={"datelow"}>Created Date (Oldest to Latest)</option>
             <option value={"priorityhigh"}>Priority (High to Low)</option>
             <option value={"prioritylow"}>Priority (Low to High)</option>
+            {!isTodo && (
+              <option value={"completedhigh"}>
+                Completed Date (Latest to Oldest)
+              </option>
+            )}
+            {!isTodo && (
+              <option value={"completedlow"}>
+                Completed Date (Oldest to Latest)
+              </option>
+            )}
           </select>
         </div>
       </div>
