@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import AddButton from "./AddButton";
 import { useSelector } from "react-redux";
 import TODOCard from "./TODOCard";
@@ -13,15 +13,23 @@ const TODOList = () => {
   const { data, isSuccess, isLoading, isError } = useGetTodosQuery();
   const [sortOption, setSortOption] = useState("datehigh");
 
+  const todo_filtered_data = useMemo(() => {
+    if (data)
+      return data["todos"].filter((todo) => {
+        console.log("Filtered");
+        return !todo.completed;
+      });
+  }, [data]);
+
+  const completed_filtered_data = useMemo(() => {
+    if (data)
+      return data["todos"].filter((todo) => {
+        console.log("Filtered");
+        return todo.completed;
+      });
+  }, [data]);
+
   if (isLoading || isError) return;
-
-  const todo_filtered_data = data["todos"].filter((todo) => {
-    return !todo.completed;
-  });
-
-  const completed_filtered_data = data["todos"].filter((todo) => {
-    return todo.completed;
-  });
 
   const sortFunctions = {
     priorityhigh: (data) => sortTodosByPriority(data, true),
@@ -58,7 +66,7 @@ const TODOList = () => {
               ? todo_filtered_data
               : sortOption === "datelow"
               ? todo_filtered_data.slice().reverse() // Reverse if datelow
-              : sortFunctions[sortOption](todo_filtered_data)
+              : sortFunctions[sortOption](todo_filtered_data.slice())
             ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
 
           {isSuccess &&
@@ -67,7 +75,7 @@ const TODOList = () => {
               ? completed_filtered_data
               : sortOption === "datelow"
               ? completed_filtered_data.slice().reverse() // Reverse if datelow
-              : sortFunctions[sortOption](completed_filtered_data)
+              : sortFunctions[sortOption](completed_filtered_data.slice())
             ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
         </div>
       </div>
