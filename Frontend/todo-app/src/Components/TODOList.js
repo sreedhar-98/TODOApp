@@ -14,19 +14,11 @@ const TODOList = () => {
   const [sortOption, setSortOption] = useState("datehigh");
 
   const todo_filtered_data = useMemo(() => {
-    if (data)
-      return data["todos"].filter((todo) => {
-        console.log("Filtered");
-        return !todo.completed;
-      });
+    if (data) return data["todos"].filter((todo) => !todo.completed);
   }, [data]);
 
   const completed_filtered_data = useMemo(() => {
-    if (data)
-      return data["todos"].filter((todo) => {
-        console.log("Filtered");
-        return todo.completed;
-      });
+    if (data) return data["todos"].filter((todo) => todo.completed);
   }, [data]);
 
   if (isLoading || isError) return;
@@ -65,7 +57,7 @@ const TODOList = () => {
             (sortOption === "datehigh"
               ? todo_filtered_data
               : sortOption === "datelow"
-              ? todo_filtered_data.slice().reverse() // Reverse if datelow
+              ? todo_filtered_data.slice().reverse()
               : sortFunctions[sortOption](todo_filtered_data.slice())
             ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
 
@@ -74,7 +66,7 @@ const TODOList = () => {
             (sortOption === "datehigh"
               ? completed_filtered_data
               : sortOption === "datelow"
-              ? completed_filtered_data.slice().reverse() // Reverse if datelow
+              ? completed_filtered_data.slice().reverse()
               : sortFunctions[sortOption](completed_filtered_data.slice())
             ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
         </div>
