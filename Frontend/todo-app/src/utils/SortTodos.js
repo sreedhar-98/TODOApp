@@ -5,10 +5,3 @@ export const sortTodosByPriority = (data, reverse) => {
     return reverse ? -priorityDiff : priorityDiff;
   });
 };
-
-export const sortTodosByCreatedDate = (data, reverse) => {
-  return data.sort((a, b) => {
-    let priorityDiff = parseInt(a.createdAt - b.createdAt);
-    return reverse ? -priorityDiff : priorityDiff;
-  });
-};
