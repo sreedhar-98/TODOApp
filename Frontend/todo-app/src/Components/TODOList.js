@@ -74,7 +74,6 @@ const TODOList = () => {
           {isSuccess && filterOption === "todo" && (
             <DisplayTodos sortOption={sortOption} data={todo_filtered_data} />
           )}
-
           {isSuccess && filterOption === "completed" && (
             <DisplayTodos
               sortOption={sortOption}

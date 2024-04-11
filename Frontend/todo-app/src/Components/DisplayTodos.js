@@ -1,17 +1,8 @@
 import React from "react";
 import TODOCard from "./TODOCard";
-import {
-  sortTodosByCompletedDate,
-  sortTodosByPriority,
-} from "../utils/SortTodos";
+import { sortFunctions } from "../utils/helperObjects";
 
 const DisplayTodos = ({ sortOption, data }) => {
-  const sortFunctions = {
-    priorityhigh: (data) => sortTodosByPriority(data, true),
-    prioritylow: (data) => sortTodosByPriority(data, false),
-    completedhigh: (data) => sortTodosByCompletedDate(data, true),
-    completedlow: (data) => sortTodosByCompletedDate(data, false),
-  };
   return (
     <>
       {(sortOption === "datehigh"
