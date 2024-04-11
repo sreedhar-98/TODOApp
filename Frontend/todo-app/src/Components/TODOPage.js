@@ -1,7 +1,6 @@
 import React from "react";
 import BackgroundImage from "../Images/BackgroundImage.jpg";
 import Header from "./Header";
-import TODOTabs from "./TODOTabs";
 import TODOList from "./TODOList";
 
 const TODOPage = () => {
@@ -13,7 +12,6 @@ const TODOPage = () => {
       >
         <Header />
         <div className="w-[80%] mx-auto my-8 flex flex-col">
-          <TODOTabs />
           <TODOList/>
         </div>
       </div>

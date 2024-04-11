@@ -25,8 +25,6 @@ const TODOList = () => {
 
   if (isLoading || isError) return;
 
-  console.log(todo_filtered_data);
-
   const sortFunctions = {
     priorityhigh: (data) => sortTodosByPriority(data, true),
     prioritylow: (data) => sortTodosByPriority(data, false),
