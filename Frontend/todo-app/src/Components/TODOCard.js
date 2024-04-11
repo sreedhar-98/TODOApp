@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setModal } from "../RTKFiles/ModalSlice";
 import dateformatter from "../utils/dateformatter";
 import getpriority from "../utils/getpriority";
 import ConfirmModal from "./ConfirmModal";
 
 const TODOCard = ({ task }) => {
-  const tabData = useSelector((store) => store.tab);
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
@@ -43,7 +42,7 @@ const TODOCard = ({ task }) => {
         {task?.task?.description}
       </p>
       <div className="flex items-center justify-between mt-4">
-        {tabData?.isTodo && (
+        {!task.completed && (
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -68,7 +67,7 @@ const TODOCard = ({ task }) => {
           </span>
         </div>
         <div className="flex space-x-2">
-          {tabData?.isTodo && (
+          {!task.completed && (
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-3 py-2 rounded-md"
               onClick={onUpdateClick}
@@ -85,18 +84,10 @@ const TODOCard = ({ task }) => {
         </div>
       </div>
       {show && isDelete && (
-        <ConfirmModal
-          setShow={setShow}
-          todo={task}
-          isCompleted={false}
-        />
+        <ConfirmModal setShow={setShow} todo={task} isCompleted={false} />
       )}
       {show && !isDelete && (
-        <ConfirmModal
-          setShow={setShow}
-          todo={task}
-          isCompleted={true}
-        />
+        <ConfirmModal setShow={setShow} todo={task} isCompleted={true} />
       )}
     </div>
   );

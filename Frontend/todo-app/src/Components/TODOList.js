@@ -10,11 +10,10 @@ import {
 } from "../utils/SortTodos";
 
 const TODOList = () => {
-  const tabData = useSelector((store) => store.tab);
   const ModalData = useSelector((store) => store.Modal);
-  const { isTodo } = tabData;
   const { data, isSuccess, isLoading, isError } = useGetTodosQuery();
   const [sortOption, setSortOption] = useState("datehigh");
+  const [filterOption, setFilterOption] = useState("none");
 
   const todo_filtered_data = useMemo(() => {
     if (data) return data["todos"].filter((todo) => !todo.completed);
@@ -26,6 +25,8 @@ const TODOList = () => {
 
   if (isLoading || isError) return;
 
+  console.log(todo_filtered_data);
+
   const sortFunctions = {
     priorityhigh: (data) => sortTodosByPriority(data, true),
     prioritylow: (data) => sortTodosByPriority(data, false),
@@ -36,7 +37,7 @@ const TODOList = () => {
   return (
     <div className="my-8 flex flex-col gap-3">
       <div className="flex gap-6 items-center">
-        {isTodo && <AddButton />}
+        {filterOption !== "completed" && <AddButton />}
         <div>
           <select
             defaultValue={"datehigh"}
@@ -49,16 +50,29 @@ const TODOList = () => {
             <option value={"datelow"}>Created Date (Oldest to Latest)</option>
             <option value={"priorityhigh"}>Priority (High to Low)</option>
             <option value={"prioritylow"}>Priority (Low to High)</option>
-            {!isTodo && (
+            {filterOption === "completed" && (
               <option value={"completedhigh"}>
                 Completed Date (Latest to Oldest)
               </option>
             )}
-            {!isTodo && (
+            {filterOption === "completed" && (
               <option value={"completedlow"}>
                 Completed Date (Oldest to Latest)
               </option>
             )}
+          </select>
+        </div>
+        <div>
+          <select
+            defaultValue={"none"}
+            onChange={(e) => setFilterOption(e.target.value)}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
+             focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+              dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option value={"none"}>None</option>
+            <option value={"todo"}>TODO</option>
+            <option value={"completed"}>Completed</option>
           </select>
         </div>
       </div>
@@ -68,7 +82,15 @@ const TODOList = () => {
       <div>
         <div className="flex flex-col gap-2">
           {isSuccess &&
-            isTodo &&
+            filterOption === "none" &&
+            (sortOption === "datehigh"
+              ? data["todos"]
+              : sortOption === "datelow"
+              ? data["todos"].slice().reverse()
+              : sortFunctions[sortOption](data["todos"].slice())
+            ).map((todo) => <TODOCard key={todo?.createdAt} task={todo}/>)}
+          {isSuccess &&
+            filterOption === "todo" &&
             (sortOption === "datehigh"
               ? todo_filtered_data
               : sortOption === "datelow"
@@ -77,13 +99,13 @@ const TODOList = () => {
             ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
 
           {isSuccess &&
-            !isTodo &&
+            filterOption === "completed" &&
             (sortOption === "datehigh"
               ? completed_filtered_data
               : sortOption === "datelow"
               ? completed_filtered_data.slice().reverse()
               : sortFunctions[sortOption](completed_filtered_data.slice())
-            ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
+            ).map((todo) => <TODOCard key={todo?.createdAt} task={todo}/>)}
         </div>
       </div>
     </div>
