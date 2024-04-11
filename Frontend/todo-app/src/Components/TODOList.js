@@ -1,13 +1,9 @@
 import React, { useMemo, useState } from "react";
 import AddButton from "./AddButton";
 import { useSelector } from "react-redux";
-import TODOCard from "./TODOCard";
 import Modal from "./Modal";
 import { useGetTodosQuery } from "../RTKFiles/TODOQuery";
-import {
-  sortTodosByPriority,
-  sortTodosByCompletedDate,
-} from "../utils/SortTodos";
+import DisplayTodos from "./DisplayTodos";
 
 const TODOList = () => {
   const ModalData = useSelector((store) => store.Modal);
@@ -24,13 +20,6 @@ const TODOList = () => {
   }, [data]);
 
   if (isLoading || isError) return;
-
-  const sortFunctions = {
-    priorityhigh: (data) => sortTodosByPriority(data, true),
-    prioritylow: (data) => sortTodosByPriority(data, false),
-    completedhigh: (data) => sortTodosByCompletedDate(data, true),
-    completedlow: (data) => sortTodosByCompletedDate(data, false),
-  };
 
   return (
     <div className="my-8 flex flex-col gap-3">
@@ -79,31 +68,19 @@ const TODOList = () => {
 
       <div>
         <div className="flex flex-col gap-2">
-          {isSuccess &&
-            filterOption === "none" &&
-            (sortOption === "datehigh"
-              ? data["todos"]
-              : sortOption === "datelow"
-              ? data["todos"].slice().reverse()
-              : sortFunctions[sortOption](data["todos"].slice())
-            ).map((todo) => <TODOCard key={todo?.createdAt} task={todo}/>)}
-          {isSuccess &&
-            filterOption === "todo" &&
-            (sortOption === "datehigh"
-              ? todo_filtered_data
-              : sortOption === "datelow"
-              ? todo_filtered_data.slice().reverse()
-              : sortFunctions[sortOption](todo_filtered_data.slice())
-            ).map((todo) => <TODOCard key={todo?.createdAt} task={todo} />)}
+          {isSuccess && filterOption === "none" && (
+            <DisplayTodos sortOption={sortOption} data={data["todos"]} />
+          )}
+          {isSuccess && filterOption === "todo" && (
+            <DisplayTodos sortOption={sortOption} data={todo_filtered_data} />
+          )}
 
-          {isSuccess &&
-            filterOption === "completed" &&
-            (sortOption === "datehigh"
-              ? completed_filtered_data
-              : sortOption === "datelow"
-              ? completed_filtered_data.slice().reverse()
-              : sortFunctions[sortOption](completed_filtered_data.slice())
-            ).map((todo) => <TODOCard key={todo?.createdAt} task={todo}/>)}
+          {isSuccess && filterOption === "completed" && (
+            <DisplayTodos
+              sortOption={sortOption}
+              data={completed_filtered_data}
+            />
+          )}
         </div>
       </div>
     </div>
