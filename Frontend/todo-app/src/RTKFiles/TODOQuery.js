@@ -17,21 +17,23 @@ const todo_api = createApi({
   tagTypes: ["TODO"],
   endpoints: (build) => ({
     getTodos: build.query({
-      query: () => ({
+      query: (args) => ({
         url: "/data",
+        params: args,
       }),
+      keepUnusedDataFor: 180,
       providesTags: ["TODO"],
     }),
     addTodo: build.mutation({
       query: (body) => ({
         url: "/data",
         method: "POST",
-        body: {...body,completed:undefined},
+        body: { ...body, completed: undefined,pageId:undefined },
       }),
       async onQueryStarted(body, { dispatch, queryFulfilled }) {
         try {
           dispatch(
-            todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
+            todo_api.util.updateQueryData("getTodos", {pageId:body?.pageId}, (draft) => {
               draft["todos"] = [body, ...draft["todos"]];
             })
           );
@@ -46,10 +48,10 @@ const todo_api = createApi({
         url: `/data/${body?.createdAt}`,
         method: "DELETE",
       }),
-      async onQueryStarted({ createdAt }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ createdAt,pageId }, { dispatch, queryFulfilled }) {
         try {
           dispatch(
-            todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
+            todo_api.util.updateQueryData("getTodos", { lastkey: pageId }, (draft) => {
               const filtered_todos = draft["todos"].filter(
                 (todo) => todo?.createdAt !== createdAt
               );
@@ -66,21 +68,22 @@ const todo_api = createApi({
       query: (body) => ({
         url: `/data/${body?.createdAt}`,
         method: "PATCH",
-        body: body,
+        body: { ...body, pageId: undefined },
       }),
-      async onQueryStarted(
-        body,
-        { dispatch, queryFulfilled }
-      ) {
+      async onQueryStarted(body, { dispatch, queryFulfilled }) {
         try {
           dispatch(
-            todo_api.util.updateQueryData("getTodos", undefined, (draft) => {
-              const updated_todos = draft["todos"].map((todo) => {
-                if (todo.createdAt === body?.createdAt) return body;
-                else return todo;
-              });
-              draft["todos"] = updated_todos;
-            })
+            todo_api.util.updateQueryData(
+              "getTodos",
+              { lastkey: body.pageId },
+              (draft) => {
+                const updated_todos = draft["todos"].map((todo) => {
+                  if (todo.createdAt === body?.createdAt) return body;
+                  else return todo;
+                });
+                draft["todos"] = updated_todos;
+              }
+            )
           );
           await queryFulfilled;
         } catch (error) {

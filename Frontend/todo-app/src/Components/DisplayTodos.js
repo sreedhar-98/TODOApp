@@ -2,7 +2,7 @@ import React from "react";
 import TODOCard from "./TODOCard";
 import { sortFunctions } from "../utils/helperObjects";
 
-const DisplayTodos = ({ sortOption, data }) => {
+const DisplayTodos = ({ sortOption, data,pageId }) => {
   return (
     <>
       {(sortOption === "datehigh"
@@ -11,7 +11,7 @@ const DisplayTodos = ({ sortOption, data }) => {
         ? data.slice().reverse()
         : sortFunctions[sortOption](data.slice())
       ).map((todo) => (
-        <TODOCard key={todo?.createdAt} task={todo} />
+        <TODOCard key={todo?.createdAt} task={todo} pageId={pageId}/>
       ))}
     </>
   );

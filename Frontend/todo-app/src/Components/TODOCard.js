@@ -5,12 +5,12 @@ import dateformatter from "../utils/dateformatter";
 import getpriority from "../utils/getpriority";
 import ConfirmModal from "./ConfirmModal";
 
-const TODOCard = ({ task }) => {
+const TODOCard = ({ task,pageId }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const onUpdateClick = () => {
-    dispatch(setModal({ isNew: false, todo: task }));
+    dispatch(setModal({ isNew: false, todo: task,pageId:pageId }));
   };
   const onDeleteClick = () => {
     setShow(true);
@@ -84,10 +84,10 @@ const TODOCard = ({ task }) => {
         </div>
       </div>
       {show && isDelete && (
-        <ConfirmModal setShow={setShow} todo={task} isCompleted={false} />
+        <ConfirmModal setShow={setShow} todo={task} isCompleted={false} pageId={pageId}/>
       )}
       {show && !isDelete && (
-        <ConfirmModal setShow={setShow} todo={task} isCompleted={true} />
+        <ConfirmModal setShow={setShow} todo={task} isCompleted={true} pageId={pageId}/>
       )}
     </div>
   );

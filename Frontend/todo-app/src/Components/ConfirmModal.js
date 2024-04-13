@@ -6,17 +6,18 @@ import {
 import DeleteIcon from "../SVG/DeleteIcon.svg";
 import CompletedIcon from "../SVG/CompletedIcon.svg";
 
-const ConfirmModal = ({ setShow, todo, isCompleted }) => {
+const ConfirmModal = ({ setShow, todo, isCompleted, pageId }) => {
   const [deleteTodo] = useDeleteTodoMutation();
   const [updateTodo] = useUpdateTodoMutation();
   const checkHandler = () => {
     if (!isCompleted) {
-      deleteTodo({ createdAt: todo.createdAt });
+      deleteTodo({ createdAt: todo.createdAt, pageId: pageId });
     } else {
       updateTodo({
         ...todo,
         completed: true,
         updatedAt: Math.floor(Date.now() / 1000),
+        pageId: pageId,
       });
     }
     setShow(false);

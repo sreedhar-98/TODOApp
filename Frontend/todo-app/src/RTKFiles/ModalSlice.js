@@ -5,9 +5,10 @@ const ModalSlice = createSlice({
   initialState: null,
   reducers: {
     setModal: (state, action) => {
-        const todo= action.payload.todo;
-        const isNew=action.payload.isNew;
-        return {isNew:isNew,todo:todo};
+      const todo = action.payload.todo;
+      const isNew = action.payload.isNew;
+      const pageId = action.payload.pageId;
+      return { isNew: isNew, todo: todo, pageId: pageId };
     },
     resetModal: (state, action) => {
       return null;
@@ -15,7 +16,6 @@ const ModalSlice = createSlice({
   },
 });
 
-export const { setModal, resetModal} =
-  ModalSlice.actions;
+export const { setModal, resetModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

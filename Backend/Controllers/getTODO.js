@@ -6,24 +6,29 @@ dotenv.config();
 const getTODO = async (req, res) => {
   try {
     const userId = req.body.userId;
-    const LastKey = req.body.LastEvaluatedKey;
+    const LastKey = req.query?.lastkey;
     const include = LastKey ? true : false;
+    const LIMIT = 2;
     const command = new QueryCommand({
       TableName: process.env.TABLE_NAME,
       KeyConditionExpression: "userId = :userId",
       ExpressionAttributeValues: {
         ":userId": userId,
       },
-      // Limit: 10,
-      // ExclusiveStartKey: include ? LastKey : undefined,
-      ScanIndexForward:false
+      Limit: LIMIT + 1,
+      ExclusiveStartKey: include
+        ? { userId: userId, createdAt: parseInt(LastKey) }
+        : undefined,
+      ScanIndexForward: false,
     });
     const result = await dynamodb.send(command);
     const todos = result.Items || [];
     const LastEvaluatedKey = result?.LastEvaluatedKey;
     return res.status(200).json({
-      todos: todos,
-      LastEvaluatedKey: LastEvaluatedKey ? LastEvaluatedKey : null,
+      todos: !LastEvaluatedKey ? todos : todos.slice(0, -1),
+      LastEvaluatedKey: !LastEvaluatedKey
+        ? undefined
+        : todos[todos.length - 2].createdAt,
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch TODO's" });
