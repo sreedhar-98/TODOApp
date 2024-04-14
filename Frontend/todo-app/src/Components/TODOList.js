@@ -6,23 +6,35 @@ import { useGetTodosQuery } from "../RTKFiles/TODOQuery";
 import DisplayTodos from "./DisplayTodos";
 import PreviousIcon from "../SVG/PreviousIcon.svg";
 import NextIcon from "../SVG/NextIcon.svg";
+import SearchIcon from "../SVG/SearchIcon.svg";
+import { FilterBySearch } from "../utils/FilterBySearch";
 
 const TODOList = () => {
   const ModalData = useSelector((store) => store.Modal);
   const [sortOption, setSortOption] = useState("datehigh");
   const [filterOption, setFilterOption] = useState("none");
   const [pages, setPages] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  
   const { data, isSuccess, isLoading, isError } = useGetTodosQuery({
     lastkey: pages.length > 0 ? pages[pages.length - 1] : undefined,
   });
 
+  const visibleData = useMemo(() => {
+    if (searchTerm === "") return data?.todos;
+    return FilterBySearch(data, searchTerm);
+  }, [data, searchTerm]);
+
+
   const todo_filtered_data = useMemo(() => {
-    if (data) return data["todos"].filter((todo) => !todo.completed);
-  }, [data]);
+    if (visibleData) return visibleData.filter((todo) => {
+      //console.log('Filtered');
+      return !todo.completed});
+  }, [visibleData]);
 
   const completed_filtered_data = useMemo(() => {
-    if (data) return data["todos"].filter((todo) => todo.completed);
-  }, [data]);
+    if (visibleData) return visibleData.filter((todo) => todo.completed);
+  }, [visibleData]);
 
   const NextHandler = () => {
     setPages([...pages, data?.LastEvaluatedKey]);
@@ -80,6 +92,30 @@ const TODOList = () => {
                 <option value={"completed"}>Completed</option>
               </select>
             </div>
+            <form className="max-w-md mx-auto">
+              <label
+                htmlFor="default-search"
+                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+              >
+                Search
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <img
+                    src={SearchIcon}
+                    alt="searchIcon"
+                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  ></img>
+                </div>
+                <input
+                  type="search"
+                  id="default-search"
+                  className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search TODO's"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </form>
           </>
         )}
       </div>
@@ -91,7 +127,7 @@ const TODOList = () => {
           {isSuccess && filterOption === "none" && (
             <DisplayTodos
               sortOption={sortOption}
-              data={data["todos"]}
+              data={visibleData}
               pageId={pages.length === 0 ? undefined : pages[pages.length - 1]}
             />
           )}
